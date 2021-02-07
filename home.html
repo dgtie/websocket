@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+
+<html>
+   <head>
+      
+      <script type = "text/javascript">
+
+         var ws;
+
+         function WebSocketTest() {
+               
+            // Let us open a web socket
+            var server = "ws:" + document.querySelector('#host').value +
+                         ":" + document.querySelector('#port').value;
+            ws = new WebSocket(server);
+				
+            ws.onopen = function() {
+                  
+               // Web Socket is connected, send data using send()
+          //     ws.send("ABCDE");
+               document.querySelector('#connect').disabled = true;
+               document.querySelector('#host').disabled = true;
+               document.querySelector('#port').disabled = true;
+               document.querySelector('#send').disabled = false;
+               document.querySelector('#string').disabled = false;
+            };
+				
+            ws.onmessage = function (evt) { 
+               var received_msg = evt.data;
+               document.querySelector('#receive').value = received_msg;
+//               alert("Message is received...");
+            };
+				
+            ws.onclose = function() { 
+                  
+               // websocket is closed.
+               document.querySelector('#connect').disabled = false;
+               document.querySelector('#host').disabled = false;
+               document.querySelector('#port').disabled = false;
+               document.querySelector('#send').disabled = true;
+               document.querySelector('#string').disabled = true;
+            };
+         }
+
+         function ws_send() {
+            ws.send(document.querySelector('#string').value);
+         }
+
+      </script>
+		
+   </head>
+   
+   <body>
+      <p id="support">WebSocket NOT supported by your Browser</p>
+      <input id="host" disabled value="localhost" />
+      <input id="port" disabled value="3333" />
+      <br/>
+      <button id="connect" type="button" disabled onclick="WebSocketTest()">
+         Connect
+      </button>
+      <button id="send" type="button" disabled onclick='ws_send()'>
+         Send Message
+      </button>
+      <input id="string" disabled />
+      send NULL to disconnect; begin with 'echo' to ...<br/>
+      Message from server: 
+      <input id="receive" disabled />
+      <script type = "text/javascript">
+         if ("WebSocket" in window) {
+           document.querySelector('#support').innerHTML =
+             "WebSocket is supported by your Browser";
+           document.querySelector('#connect').disabled = false;
+           document.querySelector('#host').disabled = false;
+           document.querySelector('#port').disabled = false;
+         }
+      </script>
+   </body>
+</html>
